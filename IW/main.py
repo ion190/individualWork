@@ -25,16 +25,6 @@ class PensionProgramRunner(QMainWindow):
         self.layout.addWidget(self.venitul_mediu_lunar_label)
         self.layout.addWidget(self.venitul_mediu_lunar_input)
         
-        self.stagiul_potential_label = QLabel("Stagiul potential (pana la pensionare)")
-        self.stagiul_potential_input = QLineEdit()
-        self.layout.addWidget(self.stagiul_potential_label)
-        self.layout.addWidget(self.stagiul_potential_input)
-        
-        self.salariul_mediu_lunar_label = QLabel("Salariul mediu lunar potential (pana la pensionare)")
-        self.salariul_mediu_lunar_input = QLineEdit()
-        self.layout.addWidget(self.salariul_mediu_lunar_label)
-        self.layout.addWidget(self.salariul_mediu_lunar_input)
-        
         self.submit_button = QPushButton("Calculati pensia")
         self.submit_button.clicked.connect(self.calculate_pension_program)
         self.layout.addWidget(self.submit_button)
@@ -46,8 +36,6 @@ class PensionProgramRunner(QMainWindow):
     def calculate_pension_program(self):
         stagiul_cotizare = self.stagiul_cotizare_input.text()
         venitul_mediu_lunar = self.venitul_mediu_lunar_input.text()
-        stagiul_potential = self.stagiul_potential_input.text()
-        salariul_mediu_lunar = self.salariul_mediu_lunar_input.text()
 
         pension_program_path = os.path.join(os.getcwd(), "pension.cpp")
 
@@ -57,7 +45,7 @@ class PensionProgramRunner(QMainWindow):
 
         try:
             subprocess.run(["g++", "-o", "pension", "pension.cpp"], check=True)
-            result = subprocess.run(["./pension", stagiul_cotizare, venitul_mediu_lunar, stagiul_potential, salariul_mediu_lunar], capture_output=True, text=True)
+            result = subprocess.run(["./pension", stagiul_cotizare, venitul_mediu_lunar], capture_output=True, text=True)
             self.result_text_edit.setPlainText(result.stdout)
         except subprocess.CalledProcessError as e:
             self.result_text_edit.setPlainText("Error: " + e.stderr)
